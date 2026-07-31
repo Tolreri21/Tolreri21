@@ -1,107 +1,34 @@
-**Data Science @ Technical University of Moldova (2025–2028)** · Chișinău, Moldova
+<h1 align="center">💻 Tech Stack</h1>h1>
 
-I build ML systems end to end — EDA, model selection, an API someone can actually call, a container, CI, AWS. The three below are small on purpose: every one of them is finished, tested and deployed rather than left at 87% in a notebook. Open to **Data Scientist Intern / Junior Data Scientist / ML Engineer** roles.
+<h3 align="center">ML & Data Science</h3>h3>
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
+    <img src="https://img.shields.io/badge/pandas-150458?style=for-the-badge&logo=pandas&logoColor=white" alt="pandas" />
+      <img src="https://img.shields.io/badge/NumPy-013243?style=for-the-badge&logo=numpy&logoColor=white" alt="NumPy" />
+        <img src="https://img.shields.io/badge/scikit--learn-F7931E?style=for-the-badge&logo=scikitlearn&logoColor=white" alt="scikit-learn" />
+          <img src="https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white" alt="PyTorch" />
+            <img src="https://img.shields.io/badge/Jupyter-F37626?style=for-the-badge&logo=jupyter&logoColor=white" alt="Jupyter" />
+              <img src="https://img.shields.io/badge/Matplotlib-11557C?style=for-the-badge&logo=python&logoColor=white" alt="Matplotlib" />
+                <img src="https://img.shields.io/badge/Seaborn-4C72B0?style=for-the-badge&logo=python&logoColor=white" alt="Seaborn" />
+</p>p>
 
-[Résumé](https://github.com/Tolreri21/Tolreri21/blob/main/Anatoli_Perederii_CV.pdf) · [LinkedIn](https://linkedin.com/in/anatoli21) · anatoliiperederii21@icloud.com
+<h3 align="center">Data & Analytics</h3>h3>
+<p align="center">
+  <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
+    <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL" />
+      <img src="https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB" />
+        <img src="https://img.shields.io/badge/PySpark-E25A1C?style=for-the-badge&logo=apachespark&logoColor=white" alt="PySpark" />
+          <img src="https://img.shields.io/badge/Power%20BI-F2C811?style=for-the-badge&logo=powerbi&logoColor=black" alt="Power BI" />
+            <img src="https://img.shields.io/badge/Excel-217346?style=for-the-badge&logo=microsoftexcel&logoColor=white" alt="Excel" />
+</p>p>
 
----
-
-## Three systems, end to end
-
-| Project | The question it answers | The number that matters |
-| :--- | :--- | :--- |
-| **[LeadGate](https://github.com/Tolreri21/LeadGate)** | Is this bank lead worth a phone call? | PR-AUC `0.417` against a `0.117` base rate — and a threshold priced in euros |
-| **[Carpy](https://github.com/Tolreri21/used-car-price-service)** | What is this used car worth, over HTTP? | MAE `$791`, ≈11% of mean price, served from EC2 |
-| **[SegmentIQ](https://github.com/Tolreri21/SegmentIQ)** | Which customers are actually paying for the business? | 16% of customers → 64% of revenue |
-
----
-
-### LeadGate · *is this lead worth a call?*
-
-`scikit-learn` `imbalanced-learn` `AWS Lambda + S3 + ECR` `Docker` `pytest` `GitHub Actions`
-
-- **The feature I had to delete.** Call duration predicts the outcome beautifully and is unknowable at call time. Dropping it cost a lot of apparent performance and bought a model that works in production; it never entered the API contract.
-- **The cheaper model won on purpose.** Tuned gradient boosting and logistic regression finished in a statistical tie, so the 7.7 KB logistic model shipped — its odds ratios are something a sales manager can push back on.
-- **0.5 is a default, not a decision.** At €100 per sale and €10 per call, the profit-maximising cutoff sits elsewhere. Recall `0.69` on test is the consequence of that arithmetic, not a target I chased.
-- **Runs as** a Lambda that pulls its artifact from S3, behind 9 tests and a three-stage pipeline.
-
-**[Code](https://github.com/Tolreri21/LeadGate)** · **[Why these choices](https://github.com/Tolreri21/LeadGate#decisions)**
-
-### Carpy · *a price estimate you can `curl`*
-
-`scikit-learn` `FastAPI` `Pydantic` `PostgreSQL` `Docker Compose` `AWS EC2` `GitHub Actions`
-
-- **One Pipeline, not two code paths.** Preprocessing and estimator are packed into a single joblib artifact, so the transform that trained the model is the transform that serves it. Train/serve skew is a class of bug worth deleting rather than debugging.
-- **Selection by cross-validated RMSE**, not by whichever split flattered me: RandomForest over Ridge and plain linear regression on 10,000 listings — test MAE `$791`.
-- **Every request is logged to Postgres**, which is where drift monitoring starts. API and database run under Docker Compose on EC2; CI lints, tests and deploys on merge to `main`.
-
-**[Code](https://github.com/Tolreri21/used-car-price-service)** · **[API contract](https://github.com/Tolreri21/used-car-price-service#api)**
-
-### SegmentIQ · *where the revenue actually lives*
-
-`pandas` `scikit-learn` `K-Means` `matplotlib` `pytest` `ruff`
-
-- **541,909 transactions, none of them clean.** Returns, cancellations, missing customer IDs — the write-up documents what I discarded and why, because that is the part of an analysis someone else has to trust.
-- **k chosen twice.** Elbow and silhouette agreed on four segments; I still checked them against a quantile-based RFM baseline before believing the clusters.
-- **The finding.** A 16% "Champions" segment drives 64% of revenue while a 37% dormant block contributes 7% — each segment named, profiled, and given one retention action.
-- **Shipped as an installable package** with tests, ruff and pre-commit, not a notebook that only runs if you execute the cells in the right order.
-
-**[Code](https://github.com/Tolreri21/SegmentIQ)** · **[Findings](https://github.com/Tolreri21/SegmentIQ#results)**
-
----
-
-## How I build
-
-The same skeleton underneath all three, so the interesting differences are in the modelling, not in the plumbing:
-
-```mermaid
-flowchart LR
-  A["raw data"] --> B["EDA · leak check<br/>data-quality notes"]
-  B --> C["sklearn Pipeline<br/>preprocess + estimator"]
-  C --> D["CV selection<br/>threshold from unit economics"]
-  D --> E["joblib artifact<br/>versioned to S3"]
-  E --> F["FastAPI / Lambda<br/>Pydantic-validated contract"]
-  F --> G[("request log")]
-  T["pytest · ruff · pre-commit"] -.-> C
-  T -.-> F
-  CI["GitHub Actions<br/>lint → test → build → deploy"] -.-> F
-```
-
-<details>
-<summary><b>The standards I hold myself to</b></summary>
-
-<br/>
-
-- **One command to reproduce.** Clone, one command, same numbers. If a result cannot be reproduced it is an anecdote.
-- **Tests assert the contract**, not just the happy path — schema, ranges, and the features the API is allowed to see.
-- **`ruff` + `pre-commit` on every repo**, so a review is a conversation about logic instead of formatting.
-- **The README opens with the decision**, not the algorithm. A reader should know why the model exists before they know what it is.
-- **Known limitations are written down.** Every one of these projects has a section describing what it does not handle yet.
-
-</details>
-
----
-
-## Now
-
-- **Building** — a fourth project outside tabular land: text, so the sklearn habits get tested against a different failure mode.
-- **Learning** — MLflow for experiment tracking beyond a spreadsheet, and enough SageMaker to know when Lambda stops being the right answer.
-- **Grinding** — 100+ SQL and 100+ Python problems solved; currently working through window functions until they stop being a lookup.
-
-<sub>Updated July 2026</sub>
-
----
-
-## Toolbox
-
-**Modelling** `pandas` `NumPy` `scikit-learn` `PyTorch` `imbalanced-learn` `SciPy`
-**Serving** `FastAPI` `Pydantic` `Docker` `Docker Compose`
-**Cloud & CI** `AWS` (Lambda, S3, ECR, EC2, IAM, SageMaker) `GitHub Actions` `MLflow`
-**Data** `SQL` (PostgreSQL, MySQL, SQL Server) `MongoDB` `PySpark` `Power BI`
-**Craft** `pytest` `ruff` `pre-commit` `uv` `Git` `Linux`
-
-<sub>Certified: Associate Data Scientist in Python (DataCamp) · AI Engineer for Data Scientists (DataCamp) · SQL Advanced (HackerRank) · Claude Code in Action (Anthropic) — 3rd place, DEVJAM 2026</sub>
-
----
-
-<sub>Russian (native) · English (B2) · Romanian (upper-intermediate) — happy to talk about any of the decisions above, including the ones that turned out wrong.</sub>
+<h3 align="center">MLOps & Engineering</h3>h3>
+<p align="center">
+  <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" />
+    <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
+      <img src="https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazonwebservices&logoColor=white" alt="AWS" />
+        <img src="https://img.shields.io/badge/GitHub%20Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white" alt="GitHub Actions" />
+          <img src="https://img.shields.io/badge/MLflow-0194E2?style=for-the-badge&logo=mlflow&logoColor=white" alt="MLflow" />
+            <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white" alt="Git" />
+              <img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black" alt="Linux" />
+</p>p>
